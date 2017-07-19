@@ -1,5 +1,6 @@
 package com.cmy.bigsnow.layout.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,20 +13,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.cmy.bigsnow.R;
 import com.cmy.bigsnow.layout.adapter.MainFragmentPageAdapter;
+import com.cmy.bigsnow.layout.fragment.AndroidFragment;
+import com.cmy.bigsnow.layout.fragment.HtmlFragment;
+import com.cmy.bigsnow.layout.fragment.IosFragment;
+import com.cmy.bigsnow.layout.fragment.WeekFragment;
+import com.cmy.bigsnow.utils.Activtyutil;
+import com.cmy.bigsnow.utils.SnackbarUtil;
 
 import java.util.ArrayList;
 
-import com.cmy.bigsnow.layout.fragment.AndroidFragment;
-import com.cmy.bigsnow.layout.fragment.WeekFragment;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private long mExitTime;//退出时间标志
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -41,17 +49,17 @@ public class MainActivity extends AppCompatActivity
     };
 
     private ArrayList<Fragment> fragmentList = new ArrayList<Fragment>() {{
-        // FIXME: 2017/7/19 修改后两个Fragment
         add(new WeekFragment());
         add(new AndroidFragment());
-        add(new WeekFragment());
-        add(new AndroidFragment());
+        add(new IosFragment());
+        add(new HtmlFragment());
     }};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Activtyutil.getInstance().addActivity(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,9 +92,8 @@ public class MainActivity extends AppCompatActivity
                 fragmentList);
 
         viewPager.setAdapter(fragmentPageAdapter);
-        tabLayout.setupWithViewPager(viewPager,true);
+        tabLayout.setupWithViewPager(viewPager, true);
         tabLayout.setTabsFromPagerAdapter(fragmentPageAdapter);
-
 
     }
 
@@ -148,5 +155,33 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 双击返回退出
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Log.d("onKeyDown", "" + keyCode);
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Snackbar sb = SnackbarUtil.ShortSnackbar(viewPager,
+                        "再按一次退出",
+                        SnackbarUtil.red).
+                        setActionTextColor(Color.WHITE).
+                        setAction("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                throw null;
+                            }
+                        });
+                sb.show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                Activtyutil.getInstance().destory();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
