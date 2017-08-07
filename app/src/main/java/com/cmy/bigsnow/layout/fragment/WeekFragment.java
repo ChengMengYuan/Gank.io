@@ -1,8 +1,11 @@
 package com.cmy.bigsnow.layout.fragment;
 
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,16 +20,19 @@ import com.cmy.bigsnow.R;
 import com.cmy.bigsnow.bean.CallBack;
 import com.cmy.bigsnow.bean.Results;
 import com.cmy.bigsnow.http.GankApi;
+import com.cmy.bigsnow.http.ServiceFactory;
 import com.cmy.bigsnow.layout.adapter.WeekRecylerAdapter;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.cmy.bigsnow.utils.ImgUtil.getRegexImgURL;
 
 public class WeekFragment extends Fragment {
     private static final String ARG_TIMELINE_TYPE = "ARG_TIMELINE_TYPE";
@@ -35,9 +41,13 @@ public class WeekFragment extends Fragment {
     private RecyclerView recyclerView;
     private CardView cardView;
     private LinearLayoutManager linearLayoutManager;
-    private ArrayList<String> tiemlists, titlelist;
+    private ArrayList<String> tiemlists, titlelist, ImgURLlist;
+    private ArrayList<Uri> Imglist;
     private ProgressBar pbWait;
+    //RecyclerView适配器
     private WeekRecylerAdapter adapter;
+    //刷新控件
+    private SwipeRefreshLayout mRefreshLayout;
 
     public static WeekFragment newInstance(int type) {
         Bundle args = new Bundle();
@@ -65,77 +75,120 @@ public class WeekFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // TODO: 2017/7/20 在这里获取7日的数据信息并展示
+        //初始化图片加载框架
+        Fresco.initialize(getContext());
         //这里使用线性布局像ListView那样展示列表,第二个参数可以改为 HORIZONTAL实现水平展示
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_week);
         pbWait = (ProgressBar) rootView.findViewById(R.id.pb_wait);
         pbWait.setVisibility(View.VISIBLE);
         cardView = (CardView) rootView.findViewById(R.id.cv_week);
-        //设置布局管理器
+        //设置RecyclerView 布局管理器
         recyclerView.setLayoutManager(linearLayoutManager);
-        //                tiemlists = new ArrayList<>();
-        //                for (int i = 1; i < 8; i++) {
-        //                    tiemlists.add("2017-7-" + i);
-        //                }
-        //
-        //                titlelist = new ArrayList<>();
-        //                for (int i = 1; i < 8; i++) {
-        //                    titlelist.add("this is the==" + i + "==title");
-        //                }
         getWeekData();
-    }
-
-
-    private void getWeekData() {
-        tiemlists = new ArrayList<>();
-        titlelist = new ArrayList<>();
-        Retrofit retrofit = new Retrofit.Builder()
-                // 设置网络请求的Url地址
-                .baseUrl("http://gank.io/api/")
-                // 设置数据解析器
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        // 创建 网络请求接口 的实例
-        GankApi gankApi = retrofit.create(GankApi.class);
-
-        //对发送请求进行封装
-        Call<CallBack> call = gankApi.getWeekData();
-        //发送网络请求(异步)
-        call.enqueue(new Callback<CallBack>() {
-            //请求成功时回调
+        /**-----我是分割线-----**/
+        mRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.layout_swipe_refresh_week);
+        //下拉刷新
+        //设置进度条的颜色
+        mRefreshLayout.setColorSchemeColors(
+                Color.RED,
+                Color.BLUE,
+                Color.GREEN);
+        //设置进度条的背景颜色
+        mRefreshLayout.setProgressBackgroundColorSchemeColor(Color.WHITE);
+        //设置大小
+        //        mRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onResponse(Call<CallBack> call, Response<CallBack> response) {
-                List<Results> resultsList = response.body().getResults();
-                for (int j = 0; j < resultsList.size(); j++) {
-                    tiemlists.add(resultsList.get(j).getPublishedAt());
-                    titlelist.add(resultsList.get(j).getTitle());
-                    Log.d("title", resultsList.get(j).getTitle());
-                }
-
-                adapter = new WeekRecylerAdapter(
-                        getContext(),
-                        cardView,
-                        tiemlists,
-                        titlelist);
-
-                //设置adapter
-                recyclerView.setAdapter(adapter);
-                //设置Item增加、移除动画
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                //添加分割线
-                //        recyclerView.addItemDecoration(new DividerItemDecoration(
-                //                getActivity(), DividerItemDecoration.HORIZONTAL));
-                pbWait.setVisibility(View.GONE);
-            }
-
-            //请求失败时回调
-            @Override
-            public void onFailure(Call<CallBack> call, Throwable t) {
-
+            public void onRefresh() {
+                getWeekData();
+                //刷新数据
+                adapter.notifyDataSetChanged();
+                //刷新完毕，关闭下拉刷新的组件
+                mRefreshLayout.setRefreshing(false);
             }
         });
+
     }
+
+
+    /**
+     * 获取本周的数据
+     */
+    private void getWeekData() {
+        //初始化容器
+        tiemlists = new ArrayList<>();
+        titlelist = new ArrayList<>();
+        Imglist = new ArrayList<>();
+        ImgURLlist = new ArrayList<>();
+
+        ServiceFactory.getInstance().createService(GankApi.class)
+                .getWeekData(10, 1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CallBack>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(CallBack value) {
+                        String str = "今日力推：";
+                        Log.d("", value.getResults().get(1).getTitle());
+                        List<Results> resultsList = value.getResults();
+                        String ImgURL;
+                        for (int i = 0; i < resultsList.size(); i++) {
+                            //获取时间,并去掉各种无用字符串
+                            tiemlists.add(resultsList.get(i).getPublishedAt()
+                                    .replace("T", "")
+                                    .replace("Z", "")
+                                    .replace(":00.0", "")
+                            );
+                            //获取标题,并去掉开头的“今日力推”字样
+                            titlelist.add(resultsList.get(i).getTitle().replace(str, ""));
+                            //用正则表达式获取图片的URL
+                            ImgURL = getRegexImgURL(resultsList.get(i).getContent());
+                            Imglist.add(Uri.parse(ImgURL));
+                            Log.d("ImgURLlist--size", "" + ImgURLlist.size());
+                            Log.d("URL", ImgURL);
+                            showData();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+
+    /**
+     * 进行数据的展示.
+     */
+    private void showData() {
+        adapter = new WeekRecylerAdapter(
+                getContext(),
+                cardView,
+                titlelist,
+                tiemlists,
+                Imglist);
+
+        //设置adapter
+        recyclerView.setAdapter(adapter);
+        //设置Item增加、移除动画
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //添加分割线
+        //        recyclerView.addItemDecoration(new DividerItemDecoration(
+        //                getActivity(), DividerItemDecoration.HORIZONTAL));
+        pbWait.setVisibility(View.GONE);
+    }
+
+
+    //         * TODO: 2017/8/1 1-能不能利用RxJava2+Retrofit2来实现！ √√√√√
+    //         * TODO: 2017/8/1 2-判断网络情况,无网络或网络不好时给出提示.
+    //         * TODO: 2017/8/1 5-下拉刷新√√√√√,上拉加载更多.
+    //         * TODO: 2017/8/7 6-上拉隐藏搜索按钮,下拉显示
 
 }

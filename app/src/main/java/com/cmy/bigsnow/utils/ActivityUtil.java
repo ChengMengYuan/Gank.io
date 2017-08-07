@@ -12,16 +12,16 @@ import java.util.List;
  * @e-mil ：      mengyuan.cheng.mier@gmail.com
  * @Description : 将所有的activity添加到List中,方便退出时统一管理
  */
-public class Activtyutil extends Application {
+public class ActivityUtil extends Application {
     public static List<Object> activitys = new ArrayList<>();
-    private static Activtyutil instance;
+    private static ActivityUtil instance;
 
     /**
      * 获取单例模式中唯一的MyApplication实例
      */
-    public static Activtyutil getInstance() {
+    public static ActivityUtil getInstance() {
         if (instance == null) {
-            instance = new Activtyutil();
+            instance = new ActivityUtil();
         }
         return instance;
     }

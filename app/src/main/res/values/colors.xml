@@ -5,4 +5,5 @@
     <color name="colorPrimaryBag">#2B2B2B </color>
     <color name="colorAccent">#FF5252</color>
     <color name="colorTabText">#B3B3B3</color>
+    <color name="white">#FFFFFF</color>
 </resources>

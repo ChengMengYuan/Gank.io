@@ -1,7 +1,13 @@
 package com.cmy.bigsnow.http;
 
 import com.cmy.bigsnow.bean.CallBack;
+import com.cmy.bigsnow.bean.CategoryData;
+import com.cmy.bigsnow.bean.DailyList;
+import com.cmy.bigsnow.bean.SearchResult;
 
+import java.util.List;
+
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -22,14 +28,47 @@ public interface GankApi {
      *
      * @return
      */
-    @GET("history/content/7/1")
-    Call<CallBack> getWeekData();
+    @GET("history/content/{count}/{pageIndex}")
+    Single<CallBack> getWeekData(@Path("count") int count,
+                                     @Path("pageIndex") int pageIndex
+    );
+    //    Observable<CallBack> getWeekData();
 
-    //http://gank.io/api/data/Android/10/1
+
+    /***
+     * 根据类别查询干货 http://gank.io/api/data/Android/10/1
+     *
+     * @param type
+     * @param pageIndex
+     * @return
+     */
     @GET("data/{type}/{count}/{pageIndex}")
-    Call<CallBack> getCommonDate(@Path("type") String type,
-                                 @Path("count") int count,
-                                 @Path("pageIndex") int pageIndex
+    Call<List<CategoryData>> getCommonDate(@Path("type") String type,
+                                           @Path("count") int count,
+                                           @Path("pageIndex") int pageIndex
+    );
+
+    /**
+     * 获取某天的干货
+     *
+     * @param date http://gank.io/api/day/2015/08/06
+     * @return
+     */
+    @GET("day/{date}")
+    Single<DailyList> getRecentlyGanHuo(@Path("date") String date);
+
+    /**
+     * 搜索
+     *
+     * @param keyword
+     * @param pageIndex
+     * @return
+     */
+    @GET("search/query/{keyword}/category/{category}/count/20/page/{pageIndex}")
+    Single<List<SearchResult>> search(
+            @Path("category") String category
+            , @Path("keyword") String keyword
+            , @Path("pageIndex") int pageIndex
     );
 
 }
