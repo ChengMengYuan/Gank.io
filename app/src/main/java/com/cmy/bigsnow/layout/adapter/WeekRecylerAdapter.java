@@ -1,48 +1,43 @@
 package com.cmy.bigsnow.layout.adapter;
 
 import android.content.Context;
-import android.net.Uri;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cmy.bigsnow.R;
+import com.cmy.bigsnow.bean.Results;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import static com.cmy.bigsnow.utils.ImgUtil.getRegexImgURL;
 
 /**
  * @Author : mengyuan.cheng
  * @Version : 2017/7/19
  * @E-mail : mengyuan.cheng.mier@gmail.com
- * @Description :
+ * @Description :RecyclerView的数据适配器,用来加载获取到的数据
  */
 
 public class WeekRecylerAdapter extends RecyclerView.Adapter<WeekRecylerAdapter.ViewHolder> {
-    private ArrayList<String> tilelists = null;
-    private ArrayList<String> timelists = null;
-    private ArrayList<Uri> ImgUrllists = null;
-    private CardView cardView;
+    private List<Results> resultsList = null;
     private Context context;
+    private String ImgURL;
+    private String title;
+    private String time;
 
     /**
      * 存放当前的数据
      */
 
     public WeekRecylerAdapter(Context context,
-                              CardView cardView,
-                              ArrayList<String> tilelists,
-                              ArrayList<String> timelists,
-                              ArrayList<Uri> ImgUrllists) {
+                              List<Results> resultsList) {
         this.context = context;
-        this.cardView = cardView;
-        this.tilelists = tilelists;
-        this.timelists = timelists;
-        this.ImgUrllists = ImgUrllists;
+        this.resultsList = resultsList;
     }
 
     //创建View,被LayoutManager所用
@@ -57,23 +52,34 @@ public class WeekRecylerAdapter extends RecyclerView.Adapter<WeekRecylerAdapter.
     //数据的绑定
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.time.setText(timelists.get(position));
-        holder.title.setText(tilelists.get(position));
-        if (ImgUrllists.size() > 0) {
-            holder.img.setImageURI(ImgUrllists.get(position));
+        if (!resultsList.isEmpty()) {
+            Results results = resultsList.get(position);
+            //获取时间,并去掉各种无用字符串
+            time = results.getPublishedAt()
+                    .replace("T", "")
+                    .replace("Z", "")
+                    .replace(":00.0", "");
+            //用正则表达式获取图片的URL
+            ImgURL = getRegexImgURL(results.getContent());
+            //获取标题,并去掉开头的“今日力推”字样
+            title = results.getTitle().replace("今日力推：", "");
+            Log.d("title", title);
         }
+        holder.time.setText(time);
+        holder.title.setText(title);
+        holder.img.setImageURI(ImgURL);
     }
 
     @Override
     public int getItemCount() {
-        return tilelists.size();
+        return resultsList.size();
     }
 
     //自定义ViewHolder,包含item的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView time;
         public final TextView title;
-        public final ImageView img;
+        public final SimpleDraweeView img;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -82,5 +88,6 @@ public class WeekRecylerAdapter extends RecyclerView.Adapter<WeekRecylerAdapter.
             img = (SimpleDraweeView) itemView.findViewById(R.id.iv_src);
         }
     }
+
 
 }

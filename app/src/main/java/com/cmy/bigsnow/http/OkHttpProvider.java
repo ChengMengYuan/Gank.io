@@ -9,11 +9,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by _SOLID
- * Date:2016/12/3
- * Time:13:44
- */
 
 public class OkHttpProvider {
 

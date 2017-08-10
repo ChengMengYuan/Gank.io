@@ -8,7 +8,6 @@ import com.cmy.bigsnow.bean.SearchResult;
 import java.util.List;
 
 import io.reactivex.Single;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -43,7 +42,7 @@ public interface GankApi {
      * @return
      */
     @GET("data/{type}/{count}/{pageIndex}")
-    Call<List<CategoryData>> getCommonDate(@Path("type") String type,
+    Single<List<CategoryData>> getCommonDate(@Path("type") String type,
                                            @Path("count") int count,
                                            @Path("pageIndex") int pageIndex
     );

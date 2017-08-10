@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @Author : mengyuan.cheng
  * @Version : 2017/8/7
  * @E-mail : mengyuan.cheng.mier@gmail.com
- * @Description : 服务工厂,l
+ * @Description : 服务工厂类
  */
 
 public class ServiceFactory {
