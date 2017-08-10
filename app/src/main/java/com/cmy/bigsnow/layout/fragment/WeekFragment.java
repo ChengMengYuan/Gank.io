@@ -1,5 +1,6 @@
 package com.cmy.bigsnow.layout.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,8 +19,10 @@ import com.cmy.bigsnow.bean.CallBack;
 import com.cmy.bigsnow.bean.Results;
 import com.cmy.bigsnow.http.GankApi;
 import com.cmy.bigsnow.http.ServiceFactory;
+import com.cmy.bigsnow.layout.activity.DetailActivity;
 import com.cmy.bigsnow.layout.adapter.WeekRecylerAdapter;
 import com.cmy.bigsnow.layout.listener.RecyclerViewOnClickListener;
+import com.cmy.bigsnow.utils.Event.MessageEvent;
 import com.cmy.bigsnow.utils.SnackbarUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -28,6 +31,8 @@ import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -120,9 +125,9 @@ public class WeekFragment extends Fragment {
 
         mRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
-            public void onLoadmore(RefreshLayout refreshlayout) {
-
-                ServiceFactory.getInstance().createService(GankApi.class)
+            public void onLoadmore(final RefreshLayout refreshlayout) {
+                ServiceFactory.getInstance()
+                        .createService(GankApi.class)
                         .getWeekData(10, pageIndex)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -170,6 +175,12 @@ public class WeekFragment extends Fragment {
                                 .setActionTextColor(Color.WHITE)
                                 .show();
                         Log.d("点击事件", resultsList.get(position).getTitle());
+                        EventBus.getDefault()
+                                .postSticky(new MessageEvent("WeekFragment"
+                                        , "DetailActivity"
+                                        , resultsList.get(position)));
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -187,7 +198,8 @@ public class WeekFragment extends Fragment {
      * 利用RxJava2+Retrofit2来获取网络数据
      */
     private void getData() {
-        ServiceFactory.getInstance().createService(GankApi.class)
+        ServiceFactory.getInstance()
+                .createService(GankApi.class)
                 .getWeekData(10, pageIndex)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -229,11 +241,4 @@ public class WeekFragment extends Fragment {
         //                getActivity(), DividerItemDecoration.HORIZONTAL));
         pbWait.setVisibility(View.GONE);
     }
-
-
-    //         * TODO: 2017/8/1 2-判断网络情况,无网络或网络不好时给出提示.
-    //         * TODO: 2017/8/7 6-上拉隐藏搜索按钮,下拉显示
-    //          https://github.com/scwang90/SmartRefreshLayout
-    //          https://segmentfault.com/a/1190000010066071
-
 }
