@@ -7,28 +7,10 @@
     android:layout_height="match_parent"
     tools:context="com.cmy.bigsnow.layout.activity.DetailActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:theme="@style/AppTheme.AppBarOverlay">
-
-        <!-- 在AppBarLayout中, 添加CollapsingToolbarLayout控件,
-             CollapsingToolbar会滚动消失, 被ToolBar替换,
-             实现滚动动画.-->
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/detail_iv_src"
-                android:layout_width="match_parent"
-                android:layout_height="173dp"
-                android:background="@color/cardview_dark_background"/>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
+        android:layout_height="match_parent">
+    </WebView>
 
 </android.support.design.widget.CoordinatorLayout>

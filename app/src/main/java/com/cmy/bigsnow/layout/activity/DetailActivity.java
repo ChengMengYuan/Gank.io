@@ -2,27 +2,34 @@ package com.cmy.bigsnow.layout.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.WebView;
 
 import com.cmy.bigsnow.R;
 import com.cmy.bigsnow.bean.Results;
 import com.cmy.bigsnow.utils.Event.MessageEvent;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class DetailActivity extends AppCompatActivity {
-    private SimpleDraweeView pic;
     private Results results;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        pic = (SimpleDraweeView) findViewById(R.id.detail_iv_src);
         //在需要订阅事件的地方注册事件
         EventBus.getDefault().register(this);
+        //去除多余的字符
+        String time = results.getUpdated_at();
+        String times[] = time.split("T");
+        String time1 = times[0];
+        String time2 = time1.replace("-", "/");
+
+        webView = (WebView) findViewById(R.id.webView);
+        webView.loadUrl("http://gank.io/" + time2);
     }
 
     /**
