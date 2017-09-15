@@ -1,8 +1,8 @@
 package com.cmy.bigsnow.http;
 
-import com.cmy.bigsnow.bean.CallBack;
-import com.cmy.bigsnow.bean.CategoryData;
-import com.cmy.bigsnow.bean.DailyList;
+import com.cmy.bigsnow.app.index.bean.CallBack;
+import com.cmy.bigsnow.app.index.bean.CategoryData;
+import com.cmy.bigsnow.app.index.bean.DailyList;
 import com.cmy.bigsnow.bean.SearchResult;
 
 import java.util.List;
@@ -28,8 +28,9 @@ public interface GankApi {
      * @return
      */
     @GET("history/content/{count}/{pageIndex}")
-    Single<CallBack> getWeekData(@Path("count") int count,
-                                     @Path("pageIndex") int pageIndex
+    Single<CallBack> getWeekData(
+            @Path("count") int count,
+            @Path("pageIndex") int pageIndex
     );
     //    Observable<CallBack> getWeekData();
 
@@ -42,9 +43,10 @@ public interface GankApi {
      * @return
      */
     @GET("data/{type}/{count}/{pageIndex}")
-    Single<List<CategoryData>> getCommonDate(@Path("type") String type,
-                                           @Path("count") int count,
-                                           @Path("pageIndex") int pageIndex
+    Single<CategoryData> getCommonDate(
+            @Path("type") String type,
+            @Path("count") int count,
+            @Path("pageIndex") int pageIndex
     );
 
     /**
@@ -63,11 +65,11 @@ public interface GankApi {
      * @param pageIndex
      * @return
      */
-    @GET("search/query/{keyword}/category/{category}/count/20/page/{pageIndex}")
+    @GET("search/query/{keyword}/category/{category}/count/10/page/{pageIndex}")
     Single<List<SearchResult>> search(
-            @Path("category") String category
-            , @Path("keyword") String keyword
-            , @Path("pageIndex") int pageIndex
+            @Path("category") String category,
+            @Path("keyword") String keyword,
+            @Path("pageIndex") int pageIndex
     );
 
 }

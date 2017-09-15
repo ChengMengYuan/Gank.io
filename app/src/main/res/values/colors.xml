@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#21201E</color>
-    <color name="colorPrimaryBag">#2B2B2B </color>
-    <color name="colorAccent">#FF5252</color>
+    <!--<color name="colorPrimary">#3F51B5</color>&lt;!&ndash;主色调&ndash;&gt;-->
+    <!--<color name="colorPrimaryDark">#21201E</color>&lt;!&ndash;主色调(暗)&ndash;&gt;-->
+    <!--<color name="colorPrimaryBag">#2B2B2B </color>&lt;!&ndash;主界面背景色&ndash;&gt;-->
+    <!--<color name="colorAccent">#FF5252</color>&lt;!&ndash;强调色&ndash;&gt;-->
+    <!--<color name="colorTabText">#B3B3B3</color>-->
+    <!--<color name="colorTextWhite">#FFFFFF</color>-->
+
+    <color name="colorPrimary">#3F51B5</color><!--主色调-->
+    <color name="colorPrimaryDark">#FFFFFF</color><!--主色调(暗)-->
+    <color name="colorPrimaryBag">#FFFFF0 </color><!--主界面背景色-->
+    <color name="colorAccent">#00BDA5</color><!--强调色-->
     <color name="colorTabText">#B3B3B3</color>
-    <color name="white">#FFFFFF</color>
+    <color name="colorTextWhite">#FFFFFF</color>
+    <color name="colorTextBlack">#313131</color>
 </resources>

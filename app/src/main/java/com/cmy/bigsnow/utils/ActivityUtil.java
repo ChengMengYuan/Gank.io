@@ -2,6 +2,12 @@ package com.cmy.bigsnow.utils;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+
+import com.cmy.bigsnow.greendao.GreenDaoManager;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +21,7 @@ import java.util.List;
 public class ActivityUtil extends Application {
     public static List<Object> activitys = new ArrayList<>();
     private static ActivityUtil instance;
+    private static Context mContext;
 
     /**
      * 获取单例模式中唯一的MyApplication实例
@@ -24,6 +31,22 @@ public class ActivityUtil extends Application {
             instance = new ActivityUtil();
         }
         return instance;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = getApplicationContext();
+        //初始化图片加载框架
+        Fresco.initialize(mContext);
+        //初始化Log
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        //初始化数据库
+        GreenDaoManager.getInstance();
+    }
+
+    public static Context getContext() {
+        return mContext;
     }
 
     /**

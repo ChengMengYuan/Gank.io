@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_daily"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_margin="8dp"
+        android:background="@color/cardview_light_background"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_title_daily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scaleType="fitCenter"
+                android:text="这里是标题(标题测试)"
+                android:textColor="@color/colorTextBlack"
+                android:textSize="16dp"/>
+
+            <TextView
+                android:id="@+id/tv_author_daily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/tv_title_daily"
+                android:layout_gravity="bottom"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:text="MengYuan"
+                android:textColor="#9E9E9E"
+                android:textSize="12dp"/>
+
+            <TextView
+                android:id="@+id/tv_time_daily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_toEndOf="@+id/tv_author_daily"
+                android:padding="5dp"
+                android:text="2017-01-14 星期五(时间测试)"
+                android:textColor="#9E9E9E"
+                android:textSize="12dp"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

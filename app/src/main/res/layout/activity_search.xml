@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cmy.bigsnow.app.search.activity.SearchActivity">
+
+    <com.arlib.floatingsearchview.FloatingSearchView
+        android:paddingTop="30dp"
+        android:id="@+id/floating_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:floatingSearch_searchHint="搜索..."
+        app:floatingSearch_suggestionsListAnimDuration="250"
+        app:floatingSearch_showSearchKey="false"
+        app:floatingSearch_leftActionMode="showHamburger"
+        app:floatingSearch_menu="@menu/search"
+        app:floatingSearch_close_search_on_keyboard_dismiss="true">
+
+    </com.arlib.floatingsearchview.FloatingSearchView>
+</android.support.constraint.ConstraintLayout>
