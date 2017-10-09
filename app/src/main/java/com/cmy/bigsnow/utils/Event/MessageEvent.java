@@ -16,7 +16,7 @@ public class MessageEvent {
      *
      * @param publish   事件的发布者
      * @param subscriber 事件的订阅者
-     * @param message    发送的事件
+     * @param message    发送的内容
      */
     public MessageEvent(String publish, String subscriber, Object message) {
         this.publish = publish;

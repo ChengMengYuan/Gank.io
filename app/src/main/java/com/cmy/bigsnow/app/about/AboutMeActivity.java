@@ -1,10 +1,13 @@
-package com.cmy.bigsnow.app;
+package com.cmy.bigsnow.app.about;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.cmy.bigsnow.R;
 
+/**
+ * The type About me activity.
+ */
 public class AboutMeActivity extends AppCompatActivity {
 
     @Override

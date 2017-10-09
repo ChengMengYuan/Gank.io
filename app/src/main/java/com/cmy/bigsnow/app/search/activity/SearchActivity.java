@@ -21,6 +21,9 @@ import com.cmy.bigsnow.R;
 import com.cmy.bigsnow.app.search.adapter.DataHelper;
 import com.cmy.bigsnow.app.search.adapter.MSuggestion;
 
+/**
+ * The type Search activity.
+ */
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
     private Context context;

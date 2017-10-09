@@ -17,7 +17,7 @@
 
         <!-- 首页Activity -->
         <activity
-            android:name=".app.index.activity.MainActivity"
+            android:name=".app.index.ui.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,7 +27,7 @@
         </activity>
         <!-- 详情界面Activity -->
         <activity
-            android:name=".app.DetailActivity"
+            android:name=".app.index.ui.activity.DetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!-- 搜索界面Activity -->
@@ -37,7 +37,7 @@
         </activity>
         <!-- 关于界面Activity -->
         <activity
-            android:name=".app.AboutMeActivity"
+            android:name=".app.about.AboutMeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!-- 福利界面Activity -->

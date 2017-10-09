@@ -11,12 +11,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The type Data helper.
+ *
  * @Author : mengyuan.cheng
  * @Version : 2017/9/5
  * @E-mail : mengyuan.cheng.mier@gmail.com
  * @Description :
  */
-
 public class DataHelper {
     private static MSuggestionDao mDao = GreenDaoManager.getInstance().getSession().getMSuggestionDao();
     private static List<MSuggestion> sColorSuggestions =
@@ -26,9 +27,9 @@ public class DataHelper {
     /**
      * 获取历史记录
      *
-     * @param context
-     * @param count
-     * @return
+     * @param context the context
+     * @param count   the count
+     * @return history
      */
     public static List<MSuggestion> getHistory(Context context, int count) {
         List<MSuggestion> suggestionList = new ArrayList<>();
@@ -50,8 +51,8 @@ public class DataHelper {
     /**
      * 设置历史记录
      *
-     * @param context
-     * @param string
+     * @param context the context
+     * @param string  the string
      */
     public static void setHistory(Context context, String string) {
         MSuggestion mSuggestion = new MSuggestion(string);

@@ -1,4 +1,4 @@
-package com.cmy.bigsnow.app.index.activity;
+package com.cmy.bigsnow.app.index.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,18 +23,22 @@ import android.view.View;
 
 import com.cmy.bigsnow.R;
 import com.cmy.bigsnow.app.index.adapter.MainFragmentPageAdapter;
-import com.cmy.bigsnow.app.index.fragment.AndroidFragment;
-import com.cmy.bigsnow.app.index.fragment.HtmlFragment;
-import com.cmy.bigsnow.app.index.fragment.IosFragment;
-import com.cmy.bigsnow.app.index.fragment.NewFragment;
+import com.cmy.bigsnow.app.index.ui.fragment.AndroidFragment;
+import com.cmy.bigsnow.app.index.ui.fragment.HtmlFragment;
+import com.cmy.bigsnow.app.index.ui.fragment.IosFragment;
+import com.cmy.bigsnow.app.index.ui.fragment.NewFragment;
 import com.cmy.bigsnow.app.search.activity.SearchActivity;
 import com.cmy.bigsnow.app.welfare.activity.WelfareActivity;
 import com.cmy.bigsnow.utils.ActivityUtil;
+import com.cmy.bigsnow.utils.Regex;
 import com.cmy.bigsnow.utils.SnackbarUtil;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * The type Main activity.
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,13 +51,13 @@ public class MainActivity extends AppCompatActivity
     //    TableLayout标签集合
     private ArrayList<String> titleList = new ArrayList<String>() {
         {
-            add("最新");
+            add("每日");
             add("安卓");
             add("IOS");
             add("前端");
         }
     };
-    //    首页Fragment集合
+    //首页Fragment集合
     private ArrayList<Fragment> fragmentList = new ArrayList<Fragment>() {{
         add(new NewFragment());
         add(new AndroidFragment());
@@ -90,8 +94,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //跳转到搜索页面
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
             }
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //        		drawer.setDrawerListener(toggle);
+        //        drawer.setDrawerListener(toggle);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentList);
 
         viewPager.setAdapter(fragmentPageAdapter);
-        //设置缓存view 的个数（实际有4个，缓存3个+正在显示的1个）
+        //设置ViewPage的缓存个数（实际有4个，缓存3个+正在显示的1个）
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager, true);
         tabLayout.setTabsFromPagerAdapter(fragmentPageAdapter);
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //    设置弹出菜单
+    //置弹出菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //    监听弹出选项
+    //监听弹出选项
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -165,19 +168,20 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_gank) {
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_welfare) {
             Intent intent = new Intent(MainActivity.this, WelfareActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_collection) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_submit) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_ours) {
+            // FIXME: 2017/9/16 测试代码
+            Regex.getTitleImg(Regex.content);
+            String s = Regex.getDailyContent(Regex.content, "Android");
+            Regex.getDailyDetail(s);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

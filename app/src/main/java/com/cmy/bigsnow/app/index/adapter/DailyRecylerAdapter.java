@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cmy.bigsnow.R;
-import com.cmy.bigsnow.app.DetailActivity;
+import com.cmy.bigsnow.app.index.ui.activity.DetailActivity;
 import com.cmy.bigsnow.app.index.bean.DailyResults;
 import com.cmy.bigsnow.utils.Event.MessageEvent;
 import com.cmy.bigsnow.utils.SnackbarUtil;
@@ -20,21 +20,34 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+import java.util.Random;
+
+import static com.cmy.bigsnow.utils.ActivityUtil.BGResources;
 
 /**
+ * The type Daily recyler adapter.
+ *
  * @Author : mengyuan.cheng
  * @Version : 2017/9/14
  * @E-mail : mengyuan.cheng.mier@gmail.com
  * @Description :
  */
-
 public class DailyRecylerAdapter extends RecyclerView.Adapter<DailyRecylerAdapter.ViewHolder> {
+    /**
+     * The Daily results list.
+     */
     protected List<DailyResults> dailyResultsList = null;
     private Context context;
     private String title;
     private String time;
     private String author;
 
+    /**
+     * Instantiates a new Daily recyler adapter.
+     *
+     * @param context          the context
+     * @param dailyResultsList the daily results list
+     */
     public DailyRecylerAdapter(Context context,
                                List<DailyResults> dailyResultsList) {
         this.context = context;
@@ -61,6 +74,18 @@ public class DailyRecylerAdapter extends RecyclerView.Adapter<DailyRecylerAdapte
             //获取标题,去掉开头的“今日力推”字样
             title = dailyResults.getDesc().replace("今日力推：", "");
             author = dailyResults.getWho();
+
+            Logger.d(author);
+            if (author == null) {
+                holder.author.setBackgroundColor(Color.WHITE);
+            } else {
+                int bottom = holder.author.getPaddingBottom();
+                int top = holder.author.getPaddingTop();
+                int right = holder.author.getPaddingRight();
+                int left = holder.author.getPaddingLeft();
+                holder.author.setBackgroundResource(randomImg());
+                holder.author.setPadding(left, top, right, bottom);
+            }
 
             holder.time.setText(time);
             holder.title.setText(title);
@@ -104,19 +129,63 @@ public class DailyRecylerAdapter extends RecyclerView.Adapter<DailyRecylerAdapte
         return dailyResultsList.size();
     }
 
+    /**
+     * The type View holder.
+     */
     //自定义ViewHolder,包含item的所有界面元素
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * The Time.
+         */
         public final TextView time;
+        /**
+         * The Title.
+         */
         public final TextView title;
+        /**
+         * The Author.
+         */
         public final TextView author;
+        /**
+         * The Card view.
+         */
         public final CardView cardView;
 
+        /**
+         * Instantiates a new View holder.
+         *
+         * @param itemView the item view
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.tv_time_daily);
             title = (TextView) itemView.findViewById(R.id.tv_title_daily);
             author = (TextView) itemView.findViewById(R.id.tv_author_daily);
             cardView = (CardView) itemView.findViewById(R.id.cv_daily);
+        }
+    }
+
+    private int randomImg() {
+        int resource, Num;
+        if (BGResources.isEmpty()) {
+            BGResources.add(R.drawable.corners);
+            BGResources.add(R.drawable.corners2);
+            BGResources.add(R.drawable.corners3);
+            BGResources.add(R.drawable.corners4);
+            BGResources.add(R.drawable.corners5);
+            BGResources.add(R.drawable.corners6);
+            BGResources.add(R.drawable.corners7);
+            BGResources.add(R.drawable.corners8);
+            BGResources.add(R.drawable.corners9);
+            Logger.t("randomImg").d("isEmpty");
+            return R.drawable.corners;
+        } else {
+            //生成随机数
+            Num = new Random().nextInt(BGResources.size());
+            resource = BGResources.get(Num);
+            BGResources.remove(Num);
+            Logger.t("randomImg").d(resource);
+            return resource;
         }
     }
 }

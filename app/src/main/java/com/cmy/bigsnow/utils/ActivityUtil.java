@@ -19,6 +19,7 @@ import java.util.List;
  * @Description : 将所有的activity添加到List中,方便退出时统一管理
  */
 public class ActivityUtil extends Application {
+    public static List<Integer> BGResources = new ArrayList<Integer>();
     public static List<Object> activitys = new ArrayList<>();
     private static ActivityUtil instance;
     private static Context mContext;
@@ -43,6 +44,7 @@ public class ActivityUtil extends Application {
         Logger.addLogAdapter(new AndroidLogAdapter());
         //初始化数据库
         GreenDaoManager.getInstance();
+
     }
 
     public static Context getContext() {

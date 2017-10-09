@@ -3,6 +3,32 @@
              android:id="@+id/SmartRefreshLayout"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_no_intent"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="gone">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_error"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:src="@drawable/ic_calendar"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_error"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/iv_error"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:text="加载失败,请点击重试..."-->
+            <!--android:textSize="20dp"/>-->
+
+    <!--</RelativeLayout>-->
+
     <ProgressBar
         android:id="@+id/pb_wait"
         style="?android:attr/progressBarStyle"
@@ -18,7 +44,6 @@
         android:id="@+id/layout_swipe_refresh_week"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -26,5 +51,7 @@
         </android.support.v7.widget.RecyclerView>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
 
 </FrameLayout>

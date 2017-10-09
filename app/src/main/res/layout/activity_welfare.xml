@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,9 +8,31 @@
     android:background="@color/colorPrimaryDark"
     tools:context="com.cmy.bigsnow.app.welfare.activity.WelfareActivity">
 
-    <include
-        layout="@layout/smart_refresh"
+    <com.lorentzos.flingswipe.SwipeFlingAdapterView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        app:max_visible="4"
+        app:min_adapter_stack="6"
+        app:rotation_degrees="16"/>
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/iv_like_wel"
+        android:layout_width="89dp"
+        android:layout_height="89dp"
+        android:layout_gravity="center"
+        android:alpha="0"
+        app:srcCompat="@drawable/ic_like"/>
+
+    <ImageView
+        android:id="@+id/iv_cancel_wel"
+        android:layout_width="89dp"
+        android:layout_height="89dp"
+        android:layout_gravity="center"
+        android:alpha="0"
+        app:srcCompat="@drawable/ic_cancel"/>
+
+</FrameLayout>

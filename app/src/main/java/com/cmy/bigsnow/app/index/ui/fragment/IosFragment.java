@@ -1,21 +1,17 @@
-package com.cmy.bigsnow.app.index.fragment;
+package com.cmy.bigsnow.app.index.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.cmy.bigsnow.R;
-import com.cmy.bigsnow.app.index.adapter.DailyRecylerAdapter;
 import com.cmy.bigsnow.app.index.bean.CategoryData;
 import com.cmy.bigsnow.app.index.bean.DailyResults;
 import com.cmy.bigsnow.http.GankApi;
 import com.cmy.bigsnow.http.ServiceFactory;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
@@ -30,17 +26,28 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-
-public class AndroidFragment extends BaseFragment {
+/**
+ * The type Ios fragment.
+ */
+public class IosFragment extends BaseFragment {
     //想要加载的页数
     private int pageIndex = 1;
 
-    public AndroidFragment() {
-        // Required empty public constructor
+    /**
+     * Instantiates a new Ios fragment.
+     */
+    public IosFragment() {
     }
 
-    public static AndroidFragment newInstance(String param1, String param2) {
-        AndroidFragment fragment = new AndroidFragment();
+    /**
+     * New instance ios fragment.
+     *
+     * @param param1 the param 1
+     * @param param2 the param 2
+     * @return the ios fragment
+     */
+    public static IosFragment newInstance(String param1, String param2) {
+        IosFragment fragment = new IosFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -56,8 +63,7 @@ public class AndroidFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_android, container, false);
+        rootView = inflater.inflate(R.layout.fragment_daily, container, false);
         isPrepared = true;
         return rootView;
     }
@@ -65,27 +71,15 @@ public class AndroidFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
+        super.initView();
         //下拉刷新
         recyclerViewRefresh();
-    }
-
-    protected void initView() {
-        //这里使用线性布局像ListView那样展示列表,第二个参数可以改为 HORIZONTAL实现水平展示
-        linearLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        pbWait = (ProgressBar) rootView.findViewById(R.id.pb_wait);
-        mRefreshLayout = (RefreshLayout) rootView.findViewById(R.id.layout_swipe_refresh_week);
-        pbWait.setVisibility(View.VISIBLE);
-        //设置RecyclerView 布局管理器
-        recyclerView.setLayoutManager(linearLayoutManager);
     }
 
     public void getData() {
         ServiceFactory.getInstance()
                 .createService(GankApi.class)
-                .getCommonDate("Android", 10, 1)
+                .getCommonDate("iOS", 10, 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<CategoryData>() {
@@ -109,29 +103,7 @@ public class AndroidFragment extends BaseFragment {
                 });
     }
 
-
     @Override
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible) {
-            return;
-        }
-        //填充数据
-        getData();
-    }
-
-    @Override
-    protected void showData() {
-        adapter = new DailyRecylerAdapter(getContext(),dailyResultsList);
-        //设置adapter
-        recyclerView.setAdapter(adapter);
-        //设置Item增加、移除动画
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //添加分割线
-        //        recyclerView.addItemDecoration(new DividerItemDecoration(
-        //                getActivity(), DividerItemDecoration.HORIZONTAL));
-        pbWait.setVisibility(View.GONE);
-    }
-
     protected void recyclerViewRefresh() {
         //下拉刷新 贝塞尔雷达 特效
         mRefreshLayout.setRefreshHeader(new SmartRefreshLayout(getContext())
@@ -154,7 +126,7 @@ public class AndroidFragment extends BaseFragment {
             public void onLoadmore(final RefreshLayout refreshlayout) {
                 ServiceFactory.getInstance()
                         .createService(GankApi.class)
-                        .getCommonDate("Android", 10, pageIndex)
+                        .getCommonDate("iOS", 10, pageIndex)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SingleObserver<CategoryData>() {
@@ -166,8 +138,10 @@ public class AndroidFragment extends BaseFragment {
                             @Override
                             public void onSuccess(CategoryData value) {
                                 //将数据放入容器
+                                Logger.t("ios").d("onSuccess");
                                 List<DailyResults> list = value.getResults();
                                 for (int i = 0; i < list.size(); i++) {
+                                    Logger.t("ios").d(list.get(i).getDesc());
                                     dailyResultsList.add(list.get(i));
                                 }
                                 pageIndex++;
@@ -183,15 +157,4 @@ public class AndroidFragment extends BaseFragment {
             }
         });
     }
-
-    /**
-     * 销毁与Fragment有关的视图，但未与Activity解除绑定，
-     * 依然可以通过onCreateView方法重新创建视图
-     */
-    @Override
-    public void onDestroyView() {
-        pageIndex = 1;
-        super.onDestroyView();
-    }
 }
-

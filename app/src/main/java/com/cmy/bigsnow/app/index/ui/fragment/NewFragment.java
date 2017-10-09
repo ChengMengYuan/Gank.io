@@ -1,4 +1,4 @@
-package com.cmy.bigsnow.app.index.fragment;
+package com.cmy.bigsnow.app.index.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +16,7 @@ import com.cmy.bigsnow.app.index.bean.CallBack;
 import com.cmy.bigsnow.bean.HistoryResults;
 import com.cmy.bigsnow.http.GankApi;
 import com.cmy.bigsnow.http.ServiceFactory;
+import com.cmy.bigsnow.utils.IntenetUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
@@ -30,6 +31,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.cmy.bigsnow.utils.IntenetUtil.NETWORN_NONE;
+
+/**
+ * The type New fragment.
+ */
 // TODO: 2017/9/15 确定无数据时取消ProgressBar,加载无网络的background,单击可重新访问网络
 // TODO: 2017/9/15 更改 NewFragment的详情界面,使用正则表达式抓取需要的信息。
 // TODO: 2017/9/15 添加缓存，无网络情况也能访问
@@ -49,6 +55,12 @@ public class NewFragment extends BaseFragment {
     //想要加载的页数
     private int pageIndex = 1;
 
+    /**
+     * New instance new fragment.
+     *
+     * @param type the type
+     * @return the new fragment
+     */
     public static NewFragment newInstance(int type) {
         Bundle args = new Bundle();
         args.putInt(ARG_TIMELINE_TYPE, type);
@@ -96,6 +108,7 @@ public class NewFragment extends BaseFragment {
         pbWait.setVisibility(View.VISIBLE);
         //设置RecyclerView 布局管理器
         recyclerView.setLayoutManager(linearLayoutManager);
+//        waitRl = (RelativeLayout) rootView.findViewById(R.id.rl_no_intent);
     }
 
     /**
@@ -156,7 +169,14 @@ public class NewFragment extends BaseFragment {
     /**
      * 利用RxJava2+Retrofit2来获取网络数据
      */
-    private void getData() {
+    protected void getData() {
+        int CONNECTIVITY_SERVICE = IntenetUtil.getNetworkState(getContext());
+        switch (CONNECTIVITY_SERVICE) {
+            case NETWORN_NONE:
+                pbWait.setVisibility(View.GONE);
+                waitRl.setVisibility(View.VISIBLE);
+                break;
+        }
         ServiceFactory.getInstance()
                 .createService(GankApi.class)
                 .getWeekData(10, pageIndex)
@@ -203,18 +223,4 @@ public class NewFragment extends BaseFragment {
         pbWait.setVisibility(View.GONE);
     }
 
-    /**
-     * 销毁与Fragment有关的视图，但未与Activity解除绑定，
-     * 依然可以通过onCreateView方法重新创建视图
-     */
-    @Override
-    public void onDestroyView() {
-        pageIndex = 1;
-        super.onDestroyView();
-    }
-
-    @Override
-    protected void lazyLoad() {
-
-    }
 }

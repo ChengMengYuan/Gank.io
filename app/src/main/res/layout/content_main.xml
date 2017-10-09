@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryBag"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".app.index.activity.MainActivity"
+    tools:context=".app.index.ui.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <android.support.v4.view.ViewPager

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cmy.bigsnow.R;
-import com.cmy.bigsnow.app.DetailActivity;
+import com.cmy.bigsnow.app.index.ui.activity.DetailActivity;
 import com.cmy.bigsnow.bean.HistoryResults;
 import com.cmy.bigsnow.utils.Event.MessageEvent;
 import com.cmy.bigsnow.utils.SnackbarUtil;
@@ -24,12 +24,13 @@ import java.util.List;
 import static com.cmy.bigsnow.utils.ImgUtil.getRegexImgURL;
 
 /**
+ * The type New recyler adapter.
+ *
  * @Author : mengyuan.cheng
  * @Version : 2017/7/19
  * @E-mail : mengyuan.cheng.mier@gmail.com
  * @Description :RecyclerView的数据适配器,用来加载获取到的数据
  */
-
 public class NewRecylerAdapter extends RecyclerView.Adapter<NewRecylerAdapter.ViewHolder> {
     private List<HistoryResults> historyResultsList = null;
     private Context context;
@@ -40,6 +41,8 @@ public class NewRecylerAdapter extends RecyclerView.Adapter<NewRecylerAdapter.Vi
 
 
     /**
+     * Instantiates a new New recyler adapter.
+     *
      * @param context            上下文
      * @param type               类别
      * @param historyResultsList 数据集
@@ -117,12 +120,29 @@ public class NewRecylerAdapter extends RecyclerView.Adapter<NewRecylerAdapter.Vi
         return historyResultsList.size();
     }
 
+    /**
+     * The type View holder.
+     */
     //自定义ViewHolder,包含item的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * The Time.
+         */
         public final TextView time;
+        /**
+         * The Title.
+         */
         public final TextView title;
+        /**
+         * The Img.
+         */
         public final SimpleDraweeView img;
 
+        /**
+         * Instantiates a new View holder.
+         *
+         * @param itemView the item view
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.tv_time);

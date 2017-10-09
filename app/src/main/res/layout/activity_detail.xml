@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".app.DetailActivity">
+    android:orientation="vertical"
+    tools:context=".app.index.ui.activity.DetailActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_dt"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimaryDark"
+        android:fitsSystemWindows="true"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题"
+            android:textSize="20sp"/>
+    </android.support.v7.widget.Toolbar>
 
     <WebView
         android:id="@+id/webView"
@@ -13,4 +30,4 @@
         android:layout_height="match_parent">
     </WebView>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
